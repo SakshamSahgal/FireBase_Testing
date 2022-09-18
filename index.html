@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <p>Name</p><input type="text" id="Name"> <p></p>
+    <p>Age</p><input type="text" id="Age">
+    <button id="Submit">Submit</button>
+
+    <!-------------------------------------imports + configuration-------------------------------->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyA85YIzVXkCUWDBgicO5NQOfRZ3sD7BGjA",
+        authDomain: "testingfirebase-413a5.firebaseapp.com",
+        projectId: "testingfirebase-413a5",
+        storageBucket: "testingfirebase-413a5.appspot.com",
+        messagingSenderId: "349119861259",
+        appId: "1:349119861259:web:6ceb0fa30704a532932d0e"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
+      import {getDatabase, ref, get, set, child, update,remove} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js" ;
+      const db = getDatabase();
+    </script>
+
+</body>
+
+</html>
+
