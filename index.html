@@ -7,10 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    
-    <p>Name</p><input type="text" id="Name"> <p></p>
-    <p>Age</p><input type="text" id="Age">
-    <button id="Submit">Submit</button>
+
+   <br>
+    Name : <input type="text" id="Name"><br> <br>
+    Age : <input type="text" id="Age"><br><br>
+    <button id="Submit_btn">Submit</button>
 
     <!-------------------------------------imports + configuration-------------------------------->
     <script type="module">
@@ -34,6 +35,27 @@
 
       import {getDatabase, ref, get, set, child, update,remove} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js" ;
       const db = getDatabase();
+      
+      //---------------------Refrences-------------------
+
+      var Name = document.getElementById("Name");
+      var Age = document.getElementById("Age");
+
+      //-------------------------------------------------
+
+      function InsertData() //this function inserts data in the text fields to the database
+      {
+        set(ref(db,"Users/"),{
+          Username : Name.value,
+          UserAge : Age.value
+        }).then(()=>{
+          alert("stored Successfully");
+        })
+      } 
+
+      Submit_btn.addEventListener('click',InsertData);
+      
+
     </script>
 
 </body>
