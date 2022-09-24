@@ -1,64 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Firebase Crud Testing</title>
 </head>
+<link rel="stylesheet" href="CSS/index.css">
 <body>
-
-   <br>
-    Name : <input type="text" id="Name"><br> <br>
-    Age : <input type="text" id="Age"><br><br>
-    <button id="Submit_btn">Submit</button>
-
-    <!-------------------------------------imports + configuration-------------------------------->
+    <div id="ADD_data_box">
+        <p align="center">Add Data</p>
+        User ID:<input type="text" id="input_uid"> <br> <br>
+        name : <input type="text" id="input_name"> <br> <br>
+        Age : <input type="number" id="input_age"> <br> <br>
+        <button id="Submit_to_db_button">Submit</button>
+    </div>
+    <div id="delete_data_box">
+        <p align="center">Delete Data</p>
+        User ID:<input type="text" id="delete_uid"> <br> <br>
+        <button id="Delete_from_db_button">Delete</button>
+    </div>
+    <div id="Display_data_box">
+        <p align="center">Display Data</p>
+        <button>Fetch Database</button>
+        <br>
+        <br>
+        <table id="data">
+            <tr> <td>ID</td> <td>Name</td> <td>Age</td> </tr>
+        </table>
+    </div>
+</body>
+<!-------------------------------------imports + configuration-------------------------------->
     <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
     
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyA85YIzVXkCUWDBgicO5NQOfRZ3sD7BGjA",
-        authDomain: "testingfirebase-413a5.firebaseapp.com",
-        projectId: "testingfirebase-413a5",
-        storageBucket: "testingfirebase-413a5.appspot.com",
-        messagingSenderId: "349119861259",
-        appId: "1:349119861259:web:6ceb0fa30704a532932d0e"
-      };
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+        apiKey: "AIzaSyCTlVI6p-LTJQDOXXV0TtWIR6QddOci_84",
+        authDomain: "fir-crudtesting-a6e2b.firebaseapp.com",
+        projectId: "fir-crudtesting-a6e2b",
+        storageBucket: "fir-crudtesting-a6e2b.appspot.com",
+        messagingSenderId: "573457346506",
+        appId: "1:573457346506:web:df01b95ee8f1c125e2a933"
+        };
     
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import {getDatabase, ref, get, set, child, update,remove} 
+          from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js" ; //importing the functions 
+        const db = getDatabase(); //gerring the database
 
-      import {getDatabase, ref, get, set, child, update,remove} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js" ;
-      const db = getDatabase();
-      
-      //---------------------Refrences-------------------
+        //-----------------------------Refrences-----------------------------------//
+        
+        var input_user_id = document.getElementById("input_uid");
+        var input_name = document.getElementById("input_name");
+        var input_age = document.getElementById("input_age");
 
-      var Name = document.getElementById("Name");
-      var Age = document.getElementById("Age");
+        var delete_uid = document.getElementById("delete_uid");
+        var submit_to_db = document.getElementById("Submit_to_db_button");
+        //--------------------------------------------------------------------------//
 
-      //-------------------------------------------------
+        function InsertData()
+        {
+            if(input_user_id.value != "" && input_name.value != "" && input_age.value != "") //if valid input
+            {
+                set(ref(db,"Users/" + input_user_id.value),{
+                Name : input_name.value,
+                Age : input_age.value
+                })
+                .then(()=>{
+                    alert("data stored successfully");
+                    //reset values
+                    input_user_id.value = ""; 
+                    input_name.value = "";
+                    input_age.value = "";
+                })
+                .catch((error)=>{
+                    alert("unsuccessful, error = " + error);
+                });
+            }
+            else
+                alert("Please Fill data");
+        }
 
-      function InsertData() //this function inserts data in the text fields to the database
-      {
-        set(ref(db,"Users/"),{
-          Username : Name.value,
-          UserAge : Age.value
-        }).then(()=>{
-          alert("stored Successfully");
-        })
-      } 
-
-      Submit_btn.addEventListener('click',InsertData);
-      
+        submit_to_db.addEventListener('click',InsertData);
 
     </script>
 
-</body>
-
 </html>
-
