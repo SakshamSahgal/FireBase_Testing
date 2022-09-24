@@ -19,10 +19,21 @@
         <button id="Check_db_button">Check Database</button>
         <p id="status"></p>
         
-        <table id="fetch_details_table" hidden>
-            <tr> <td>ID</td> <td>Name</td> <td>Age</td> </tr>
+        <table id="fetch_details_table">
         </table>
     </div>
+
+    <div id="Update_data_box">
+        <p align="center">Update Data</p>
+        User ID:<input type="text" id="update_uid"> <br> <br>
+        <button id="Update_from_db_button">Find User</button>
+        <p></p>
+        <div id="update_Portal">
+            Name : <input type="text">
+            Age : <input type="number">
+        </div>
+    </div>
+
 
     <div id="delete_data_box">
         <p align="center">Delete Data</p>
@@ -71,7 +82,7 @@
         //-----------------------------Refrences-----------------------------------//
         
         //-------------ADD data box refrences ------------------//
-        
+        {
         var input_user_id = document.getElementById("input_uid");
         var input_name = document.getElementById("input_name");
         var input_age = document.getElementById("input_age");
@@ -83,10 +94,12 @@
         var Check_db_button = document.getElementById("Check_db_button");
         var status = document.getElementById("status");
         var check_db_table = document.getElementById("fetch_details_table"); //getting the table
+        }
+        
         
         //--------------------------------------------------------------------------//
 
-        function InsertData() //function inserts data to DB
+        function InsertData() //function inserts data to Database
         {
             if(input_user_id.value != "" && input_name.value != "" && input_age.value != "") //if valid input
             {
@@ -110,36 +123,52 @@
         }
 
 
-        function SelectData()
+        function SelectData() //function called to fetch a specific snapshot(row)
         {
-            if(check_id.value != "")
+            var rowCount = check_db_table.rows.length;
+                for (var x=rowCount-1; x>=0; x--)  //Deleting earlier rows if any
+                    check_db_table.deleteRow(x);
+
+            if(check_id.value != "") //if field is not empty
             {
                 const dbref = ref(db); //getting a refrence to the DB
                 get(child(dbref,"Users/"+ check_id.value)).then((snapshot)=>{
                     if(snapshot.exists()) //if this record exists
                     {
                         status.innerHTML = "Found!"; //printing the status as found
-                        check_db_table.hidden = false; //unhiding the table
-                        var row = check_db_table.insertRow(1); //inserting at the first index (since index 0 is heading)
+                        var row = check_db_table.insertRow(0);
+                        var heading0 = row.insertCell(0); //inserting at the 0th col (starting)
+                        var heading1 = row.insertCell(1); //inserting at the 1th col (starting)
+                        var heading2 = row.insertCell(2); //inserting at the 2th col (starting)
+                        heading0.innerHTML = "ID"; //assigning values
+                        heading1.innerHTML = "Name"; //assigning values
+                        heading2.innerHTML = "Age"; //assigning values
+                        row = check_db_table.insertRow(1); //inserting at the first index (since index 0 is heading)
                         var cell0 = row.insertCell(0); //inserting at the 0th col (starting)
                         var cell1 = row.insertCell(1); //inserting at the 1th col (starting)
                         var cell2 = row.insertCell(2); //inserting at the 2th col (starting)
-                        cell0.innerHTML = check_id.value;
-                        cell1.innerHTML = snapshot.val().Name;
-                        cell2.innerHTML = snapshot.val().Age;
-                        console.log(check_id.value + " " + snapshot.val().Name + " " + snapshot.val().Age);
+                        cell0.innerHTML = check_id.value; //assigning values
+                        cell1.innerHTML = snapshot.val().Name; //assigning values
+                        cell2.innerHTML = snapshot.val().Age; //assigning values
+                        //console.log(check_id.value + " " + snapshot.val().Name + " " + snapshot.val().Age);
                     }
                     else
+                    {
                         alert("No data found");
+                        status.innerHTML = "Not - Found!"; //printing the status as not found
+                    }
                 })
                 .catch((error)=>{
                     alert("unsuccessful, error = " + error);
                 });
             }
             else
-             alert("Please Fill data");
+                 alert("Please Fill data");
             
         }
+
+
+        //-------------Assignments----------------------//
         submit_to_db.addEventListener('click',InsertData);
         Check_db_button.addEventListener('click',SelectData);
     </script>
