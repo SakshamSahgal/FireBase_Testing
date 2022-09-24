@@ -4,6 +4,7 @@
 </head>
 <link rel="stylesheet" href="CSS/index.css">
 <body>
+    
     <div id="ADD_data_box">
         <p align="center">Add Data</p>
         User ID:<input type="text" id="input_uid"> <br> <br>
@@ -11,12 +12,27 @@
         Age : <input type="number" id="input_age"> <br> <br>
         <button id="Submit_to_db_button">Submit</button>
     </div>
+
+    <div id="check_db_box">
+        <p>Show details of a particular User</p>
+        ID : <input type="text" id="check_id">
+        <button id="Check_db_button">Check Database</button>
+        <p id="status"></p>
+        
+        <table id="fetch_details_table" hidden>
+            <tr> <td>ID</td> <td>Name</td> <td>Age</td> </tr>
+        </table>
+    </div>
+
     <div id="delete_data_box">
         <p align="center">Delete Data</p>
         User ID:<input type="text" id="delete_uid"> <br> <br>
         <button id="Delete_from_db_button">Delete</button>
     </div>
-    <div id="Display_data_box">
+    
+    
+
+    <div id="Display_database_box">
         <p align="center">Display Data</p>
         <button>Fetch Database</button>
         <br>
@@ -25,9 +41,12 @@
             <tr> <td>ID</td> <td>Name</td> <td>Age</td> </tr>
         </table>
     </div>
+    
+    
 </body>
 <!-------------------------------------imports + configuration-------------------------------->
-    <script type="module">
+<script src="Scripts/script.js"></script>
+<script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
         // TODO: Add SDKs for Firebase products that you want to use
@@ -47,19 +66,27 @@
         const app = initializeApp(firebaseConfig);
         import {getDatabase, ref, get, set, child, update,remove} 
           from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js" ; //importing the functions 
-        const db = getDatabase(); //gerring the database
+        const db = getDatabase(); //getting the database
 
         //-----------------------------Refrences-----------------------------------//
+        
+        //-------------ADD data box refrences ------------------//
         
         var input_user_id = document.getElementById("input_uid");
         var input_name = document.getElementById("input_name");
         var input_age = document.getElementById("input_age");
-
-        var delete_uid = document.getElementById("delete_uid");
         var submit_to_db = document.getElementById("Submit_to_db_button");
+
+        //-------------check db box refrences ------------------//
+        
+        var check_id = document.getElementById("check_id");
+        var Check_db_button = document.getElementById("Check_db_button");
+        var status = document.getElementById("status");
+        var check_db_table = document.getElementById("fetch_details_table"); //getting the table
+        
         //--------------------------------------------------------------------------//
 
-        function InsertData()
+        function InsertData() //function inserts data to DB
         {
             if(input_user_id.value != "" && input_name.value != "" && input_age.value != "") //if valid input
             {
@@ -82,8 +109,38 @@
                 alert("Please Fill data");
         }
 
+
+        function SelectData()
+        {
+            if(check_id.value != "")
+            {
+                const dbref = ref(db); //getting a refrence to the DB
+                get(child(dbref,"Users/"+ check_id.value)).then((snapshot)=>{
+                    if(snapshot.exists()) //if this record exists
+                    {
+                        status.innerHTML = "Found!"; //printing the status as found
+                        check_db_table.hidden = false; //unhiding the table
+                        var row = check_db_table.insertRow(1); //inserting at the first index (since index 0 is heading)
+                        var cell0 = row.insertCell(0); //inserting at the 0th col (starting)
+                        var cell1 = row.insertCell(1); //inserting at the 1th col (starting)
+                        var cell2 = row.insertCell(2); //inserting at the 2th col (starting)
+                        cell0.innerHTML = check_id.value;
+                        cell1.innerHTML = snapshot.val().Name;
+                        cell2.innerHTML = snapshot.val().Age;
+                        console.log(check_id.value + " " + snapshot.val().Name + " " + snapshot.val().Age);
+                    }
+                    else
+                        alert("No data found");
+                })
+                .catch((error)=>{
+                    alert("unsuccessful, error = " + error);
+                });
+            }
+            else
+             alert("Please Fill data");
+            
+        }
         submit_to_db.addEventListener('click',InsertData);
-
+        Check_db_button.addEventListener('click',SelectData);
     </script>
-
 </html>
